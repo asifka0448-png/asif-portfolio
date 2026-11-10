@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowDownRight, ArrowLeft, ArrowUpRight, Asterisk, ChevronLeft, ChevronRight, Expand, Menu, X } from 'lucide-react';
+import { ArrowDown, ArrowDownRight, ArrowLeft, ArrowUpRight, Asterisk, ChevronLeft, ChevronRight, Expand, Menu, Play, X } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { contactLinks } from './data/contact.js';
 import { categories, expertise, projects, tools } from './data/portfolio.js';
@@ -38,6 +38,61 @@ function ImagePreview({ image, onClose, projectName = 'AURA', gallery = [], acti
       <div className="project-dialog-copy"><span className="dialog-kicker">{projectName} · PROJECT IMAGE</span><p className="project-dialog-category">{image.caption ?? image.title ?? 'Full-size image'}{hasNavigation && <span className="lightbox-position">{String(activeIndex + 1).padStart(2, '0')} / {String(gallery.length).padStart(2, '0')}</span>}</p></div>
     </div>
   </dialog>;
+}
+function VideoPreview({ videos, activeIndex, onClose, onNavigate, projectName }) {
+  if (activeIndex === null || !videos[activeIndex]) return null;
+  const video = videos[activeIndex];
+  return <dialog ref={(node) => { if (node && !node.open) node.showModal(); }} className="project-dialog aura-lightbox creative-video-lightbox" aria-label={`Video preview: ${video.title}`} onCancel={(event) => { event.preventDefault(); onClose(); }} onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+    <div className="project-dialog-panel"><button className="project-dialog-close" type="button" onClick={onClose} aria-label="Close video preview"><X size={18}/></button>
+      {videos.length > 1 && <button className="lightbox-nav lightbox-nav-previous" type="button" onClick={() => onNavigate((activeIndex - 1 + videos.length) % videos.length)} aria-label="Previous video"><ChevronLeft size={22}/></button>}
+      <video key={video.id} src={video.src} poster={video.poster || undefined} controls autoPlay playsInline preload="metadata" aria-label={video.title}/>
+      {videos.length > 1 && <button className="lightbox-nav lightbox-nav-next" type="button" onClick={() => onNavigate((activeIndex + 1) % videos.length)} aria-label="Next video"><ChevronRight size={22}/></button>}
+      <div className="project-dialog-copy"><span className="dialog-kicker">{projectName} · VIDEO PROJECT</span><p className="project-dialog-category">{video.title}<span className="lightbox-position">{String(activeIndex + 1).padStart(2, '0')} / {String(videos.length).padStart(2, '0')}</span></p>{video.description && <p>{video.description}</p>}</div>
+    </div>
+  </dialog>;
+}
+function CategoryTabs({ categories, activeCategory, onSelect }) {
+  return <nav className="work-category-tabs" aria-label="Portfolio categories">
+    <button type="button" className={!activeCategory ? 'is-active' : ''} aria-current={!activeCategory ? 'page' : undefined} onClick={() => onSelect(null)}>All categories</button>
+    {categories.map((category) => <button type="button" key={category.id} className={activeCategory?.id === category.id ? 'is-active' : ''} aria-current={activeCategory?.id === category.id ? 'page' : undefined} onClick={() => onSelect(category)}>{category.title}</button>)}
+  </nav>;
+}
+function CreativeCategoryGallery({ category, projects }) {
+  const [selectedImageIndex, setSelectedImageIndex] = useState(null);
+  const [selectedVideoIndex, setSelectedVideoIndex] = useState(null);
+  const imageGallery = projects.flatMap((project) => (project.images?.length ? project.images : project.image ? [{ src: project.image, alt: project.title }] : []).map((image) => ({
+    ...image,
+    alt: image.alt || `${project.title}${image.side ? ` — ${image.side}` : ''}`,
+    caption: `${project.title}${image.side ? ` — ${image.side}` : ''}`,
+  })));
+  const videos = projects.filter((project) => project.mediaType === 'video');
+  return <>
+    {projects.length ? <div className={`creative-gallery creative-gallery-${category.galleryType}`}>
+      {projects.map((project) => {
+        if (project.mediaType === 'video') {
+          const videoIndex = videos.findIndex((video) => video.id === project.id);
+          return <button className="creative-project creative-video-card" type="button" key={project.id} onClick={() => setSelectedVideoIndex(videoIndex)}>
+            <span className="creative-video-thumbnail">{project.poster ? <img src={project.poster} alt={`${project.title} video thumbnail`} loading="lazy"/> : <span className="creative-video-no-poster"/>}<span className="creative-play-button"><Play size={19} fill="currentColor"/></span></span>
+            <span className="creative-project-copy"><strong>{project.title}</strong>{project.description && <span>{project.description}</span>}</span>
+          </button>;
+        }
+        const projectImages = project.images?.length ? project.images : project.image ? [{ src: project.image, alt: project.title }] : [];
+        return <article className="creative-project" key={project.id}>
+          <div className={`creative-project-images ${projectImages.length > 1 ? 'has-multiple-images' : ''}`}>
+            {projectImages.map((image) => {
+              const imageIndex = imageGallery.findIndex((item) => item.src === image.src && item.caption === `${project.title}${image.side ? ` — ${image.side}` : ''}`);
+              return <button className="creative-image-button" type="button" key={`${project.id}-${image.side || image.src}`} onClick={() => setSelectedImageIndex(imageIndex)} aria-label={`Preview ${project.title}${image.side ? ` ${image.side}` : ''}`}>
+                <span className="creative-image-frame"><img src={image.src} alt={image.alt || `${project.title}${image.side ? ` — ${image.side}` : ''}`} loading="lazy"/>{image.side && <span className="creative-image-side">{image.side}</span>}<span className="aura-expand"><Expand size={15}/></span></span>
+              </button>;
+            })}
+          </div>
+          <div className="creative-project-copy"><strong>{project.title}</strong>{project.description && <span>{project.description}</span>}</div>
+        </article>;
+      })}
+    </div> : <div className="category-empty"><span>{category.title}</span><p>Projects coming soon.</p></div>}
+    {selectedImageIndex !== null && <ImagePreview image={imageGallery[selectedImageIndex]} onClose={() => setSelectedImageIndex(null)} projectName={category.title.toUpperCase()} gallery={imageGallery} activeIndex={selectedImageIndex} onNavigate={setSelectedImageIndex}/>}
+    <VideoPreview videos={videos} activeIndex={selectedVideoIndex} onClose={() => setSelectedVideoIndex(null)} onNavigate={setSelectedVideoIndex} projectName={category.title.toUpperCase()}/>
+  </>;
 }
 function AuraReveal({ children, className = '' }) {
   const sectionRef = useRef(null);
@@ -192,15 +247,16 @@ function Work() {
   return <section className="work section-wrap" id="work"><SectionLabel number="01">SELECTED WORK</SectionLabel>
     {activeProject?.pageSlug === 'aura' ? <AuraProjectPage onBack={backToCategory}/> : activeProject?.pageSlug === 'honeybee-studio' ? <HoneybeeProjectPage onBack={backToCategory}/> : moviePosterProjects.some((project) => project.id === activeProject?.id) ? <MoviePosterProjectPage project={activeProject} onBack={backToCategory} onAllCategories={backToCategories}/> : <>
       <div className="section-heading"><h2>Selected <em>projects.</em></h2><p>{activeCategory ? `${categoryProjects.length} ${categoryProjects.length === 1 ? 'project' : 'projects'} in this category.` : <>Explore work<br/>by category.</>}</p></div>
+      <CategoryTabs categories={categories} activeCategory={activeCategory} onSelect={(category) => category ? openCategory(category.id) : backToCategories()}/>
       {activeCategory ? <div className="category-view">
         <nav className="work-breadcrumbs" aria-label="Breadcrumb"><a href="#home">Home</a><span>/</span><a href="#work" onClick={(event) => { event.preventDefault(); backToCategories(); }}>Selected Work</a><span>/</span><span aria-current="page">{activeCategory.title}</span></nav>
         <button className="back-to-categories" type="button" onClick={backToCategories}><ArrowLeft size={15}/> Back to All Categories</button>
-        {categoryProjects.length ? <div className={`project-grid ${activeCategory.id === 'movie-posters' ? 'movie-poster-grid' : ''} ${activeCategory.id === 'corporate-commercial' ? 'corporate-project-grid' : ''}`}>{categoryProjects.map((project, index) => {
+        {activeCategory.galleryType ? <CreativeCategoryGallery category={activeCategory} projects={categoryProjects}/> : categoryProjects.length ? <div className={`project-grid ${activeCategory.id === 'movie-posters' ? 'movie-poster-grid' : ''} ${activeCategory.id === 'corporate-commercial' ? 'corporate-project-grid' : ''}`}>{categoryProjects.map((project, index) => {
           const contents = <><div className="project-image"><img src={project.image} alt={`${project.title} ${project.category.toLowerCase()} concept`} loading="lazy"/><span className="project-open"><ArrowUpRight size={18}/></span><span className="project-num">{String(index + 1).padStart(2, '0')} / {String(categoryProjects.length).padStart(2, '0')}</span></div><div className="project-meta"><div><h3>{project.title}</h3><span>{project.category}</span>{project.disclaimer && <small className="project-disclaimer">{project.disclaimer}</small>}</div><span className="project-year">{project.pageSlug ? 'VIEW PROJECT' : 'PREVIEW'} <ArrowUpRight size={13}/></span></div></>;
           return project.pageSlug
             ? <a className="project-card" href={`${categoryRoutePrefix}${project.categoryId}/${project.pageSlug}`} key={project.id} onClick={(event) => { event.preventDefault(); openProject(project); }} aria-label={`Open ${project.title} project`}>{contents}</a>
             : <button className="project-card" type="button" key={project.id} onClick={() => activeCategory.id === 'corporate-commercial' ? setSelectedCorporateIndex(index) : setSelectedProject(project)} aria-label={`Preview ${project.title}`}>{contents}</button>;
-        })}</div> : <div className="category-empty"><span>{activeCategory.title}</span><p>Projects for this category are being added.</p></div>}
+        })}</div> : <div className="category-empty"><span>{activeCategory.title}</span><p>Projects coming soon.</p></div>}
         {selectedCorporateIndex !== null && activeCategory?.id === 'corporate-commercial' && <ImagePreview image={corporateGallery[selectedCorporateIndex]} onClose={() => setSelectedCorporateIndex(null)} projectName="CORPORATE & COMMERCIAL" gallery={corporateGallery} activeIndex={selectedCorporateIndex} onNavigate={setSelectedCorporateIndex}/>}
         <ProjectPreview project={selectedProject} onClose={() => setSelectedProject(null)}/>
       </div> : <div className="category-grid">{categories.map((category, index) => {

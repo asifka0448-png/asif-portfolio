@@ -1,13 +1,17 @@
 import { moviePosterProjects } from './moviePosters.js';
 import { corporateProjects } from './corporate.js';
+import { creativeCategories, creativeProjects } from './creativeWork.js';
 
 export const categories = [
   { id: 'product-advertising', title: 'Product Advertising' },
   { id: 'brand-identity-packaging', title: 'Brand Identity & Packaging' },
-  { id: 'social-media-marketing', title: 'Social Media & Marketing Designs' },
+  ...creativeCategories.filter((category) => category.id === 'social-media-designs'),
   { id: 'movie-posters', title: 'Movie Posters' },
   { id: 'wedding-photo-manipulation', title: 'Wedding Photo Manipulation' },
   { id: 'corporate-commercial', title: 'Corporate & Commercial Designs' },
+  ...creativeCategories.filter((category) => category.id !== 'social-media-designs'),
+  // Keep the pre-existing category intact for its existing projects and routes.
+  { id: 'social-media-marketing', title: 'Social Media & Marketing Designs' },
 ];
 
 export const projects = [
@@ -21,6 +25,7 @@ export const projects = [
   { id: 'coca-cola', categoryId: 'product-advertising', title: 'Coca-Cola', category: 'Product Advertising', image: '/assets/product-advertising/COLA.jpg', disclaimer: 'Unofficial personal design concept · not an official brand campaign.' },
   ...moviePosterProjects,
   ...corporateProjects,
+  ...creativeProjects,
 ];
 
 export const expertise = [

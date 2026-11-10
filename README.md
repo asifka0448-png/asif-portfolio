@@ -22,6 +22,9 @@ A responsive React and Vite portfolio. Categories, projects, expertise and tools
 - HoneyBee Studio's campaign details and ordered gallery are editable in src/data/honeybee.js; its project entry in src/data/portfolio.js connects it only to Social Media & Marketing Designs. Original campaign artwork is in public/assets/honeybee-studio/.
 - Movie poster titles, descriptions, concepts and image paths are editable in src/data/moviePosters.js. Their project cards link to individual detail views, and the supplied poster originals remain in public/assets/movie-posters/.
 - Corporate & Commercial Designs are listed in src/data/corporate.js. Each image is its own work, including the two Chicfer designs and original/redesigned family gathering invitations.
+- New Social Media Designs, logo/identity, visiting card, Motion Graphics, and AI Promotional Videos categories plus their editable project records live in src/data/creativeWork.js. Existing Social Media & Marketing Designs remains a separate category with HoneyBee Studio.
+- Place future logo images in public/assets/logos/, visiting card sides in public/assets/visiting-cards/, motion MP4s and posters in public/assets/motion-graphics/, and AI promotional MP4s/posters in public/assets/ai-promotional-videos/. Keep a two-sided card together in one project record with separate front/back image entries. Add video records with a video source, optional poster and description; the category gallery supplies the player and navigation.
+- Category tabs let visitors switch between all work categories. New media galleries keep image proportions, group card sides, and use image or video previews with previous/next controls.
 - Skills and software tools are in the same file.
 
 ## Add contact details
