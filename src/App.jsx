@@ -115,64 +115,47 @@ function AuraArtwork({ image, onPreview, className = '' }) {
   </button>;
 }
 function AuraSection({ id, number, title, description, children }) {
-  return <AuraReveal className="aura-section"><div className="aura-section-heading"><span className="aura-section-number">{number} / 06</span><div><h2>{title}</h2>{description && <p>{description}</p>}</div></div><div id={id}>{children}</div></AuraReveal>;
+  return <section className="aura-section"><div className="aura-section-heading"><span className="aura-section-number">{number} / 06</span><div><h2>{title}</h2>{description && <p>{description}</p>}</div></div><div id={id}>{children}</div></section>;
+}
+function CompleteProjectImage({ image, className = '' }) {
+  return <figure className={`complete-project-image ${className}`}><div className="complete-project-image-stage"><img src={image.src} alt={image.alt} loading="eager" decoding="async"/></div><figcaption>{image.caption}</figcaption></figure>;
 }
 function AuraProjectPage({ onBack }) {
-  const [previewImage, setPreviewImage] = useState(null);
-  const identity = auraProject.sections.find((section) => section.id === 'brand-identity');
-  const productDesign = auraProject.sections.find((section) => section.id === 'product-design');
-  const remainingProductImages = productDesign.images.filter((image) => image.src !== auraProject.heroImage.src);
-  const packaging = auraProject.sections.find((section) => section.id === 'packaging-system');
-  const campaign = auraProject.sections.find((section) => section.id === 'social-campaign');
+  const projectImages = [auraProject.heroImage, ...auraProject.sections.flatMap((section) => section.images)]
+    .filter((image, index, images) => images.findIndex((candidate) => candidate.src === image.src) === index);
   return <div className="aura-project-page">
-    <AuraReveal className="aura-hero">
+    <div className="aura-hero">
       <div className="aura-hero-copy"><nav className="work-breadcrumbs" aria-label="Breadcrumb"><a href="#home">Home</a><span>/</span><a href="#work" onClick={(event) => { event.preventDefault(); onBack(); }}>Selected Work</a><span>/</span><span>{auraProject.category}</span><span>/</span><span aria-current="page">AURA</span></nav>
         <span className="aura-category-label">BRAND IDENTITY & PACKAGING</span><span className="aura-hero-number">01 / 06</span><h1>{auraProject.title}</h1><p className="aura-hero-subtitle">{auraProject.subtitle}</p><p className="aura-tagline">{auraProject.tagline}</p><p className="aura-hero-description">{auraProject.description}</p>
         <button className="back-to-categories aura-back-link" type="button" onClick={onBack}><ArrowLeft size={15}/> Back to Brand Identity & Packaging</button>
-      </div><AuraArtwork image={auraProject.heroImage} onPreview={setPreviewImage} className="aura-hero-artwork"/>
-    </AuraReveal>
-    <div className="project-gallery-note"><span>COMPLETE PROJECT GALLERY</span><span>12 ORIGINAL IMAGES</span></div>
-    <AuraSection id="brand-identity" number="02" title={identity.title} description={identity.description}>
-      <div className="aura-identity-layout"><AuraArtwork image={identity.images[0]} onPreview={setPreviewImage} className="aura-identity-artwork"/><div className="aura-identity-note"><span>VISUAL LANGUAGE</span><p>Deep purple brings depth and presence; silver typography adds a quiet metallic refinement. Minimal compositions keep the identity elegant and distinctly premium.</p></div></div>
-    </AuraSection>
-    <AuraSection id="product-design" number="03" title={productDesign.title} description={productDesign.description}>
-      <div className="aura-gallery aura-gallery-product">{remainingProductImages.map((image) => <AuraArtwork key={image.src} image={image} onPreview={setPreviewImage}/>)}</div>
-    </AuraSection>
-    <AuraSection id="packaging-system" number="04" title={packaging.title} description={packaging.description}>
-      <div className="aura-gallery aura-gallery-packaging">{packaging.images.map((image) => <AuraArtwork key={image.src} image={image} onPreview={setPreviewImage}/>)}</div>
-    </AuraSection>
-    <AuraSection id="social-campaign" number="05" title={campaign.title} description={campaign.description}>
-      <div className="aura-gallery aura-gallery-campaign">{campaign.images.map((image) => <AuraArtwork key={image.src} image={image} onPreview={setPreviewImage}/>)}</div>
-    </AuraSection>
+      </div>
+    </div>
+    <div className="project-gallery-note"><span>PROJECT GALLERY</span><span>{String(projectImages.length).padStart(2, '0')} ORIGINAL IMAGES</span></div>
+    <div className="aura-complete-gallery">{projectImages.map((image) => <CompleteProjectImage key={image.src} image={image}/>)}</div>
     <AuraSection id="project-credits" number="06" title="Project Credits" description="A personal concept study in luxury fragrance branding.">
       <div className="aura-credits-grid">{auraProject.credits.map((credit) => <div className="aura-credit" key={credit.label}><span>{credit.label}</span><p>{credit.value}</p></div>)}</div>
       <p className="aura-disclaimer">{auraProject.disclaimer}</p>
       <button className="back-to-categories aura-back-link aura-back-bottom" type="button" onClick={onBack}><ArrowLeft size={15}/> Back to Brand Identity & Packaging</button>
     </AuraSection>
-    <ImagePreview image={previewImage} onClose={() => setPreviewImage(null)}/>
   </div>;
 }
 function HoneybeeProjectPage({ onBack }) {
-  const [previewImage, setPreviewImage] = useState(null);
-  const [intro, ...campaignImages] = honeybeeProject.images;
   return <div className="honeybee-project-page">
-    <AuraReveal className="honeybee-hero">
+    <div className="honeybee-hero">
       <div className="honeybee-hero-copy">
         <nav className="work-breadcrumbs" aria-label="Breadcrumb"><a href="#home">Home</a><span>/</span><a href="#work" onClick={(event) => { event.preventDefault(); onBack(); }}>Selected Work</a><span>/</span><span>{honeybeeProject.category}</span><span>/</span><span aria-current="page">HoneyBee Studio</span></nav>
         <span className="aura-category-label">SOCIAL MEDIA & MARKETING DESIGNS</span><span className="aura-hero-number">BRAND LAUNCH CAMPAIGN</span>
         <h1>{honeybeeProject.title}</h1><p className="honeybee-tagline">{honeybeeProject.tagline}</p><p className="aura-hero-description">{honeybeeProject.description}</p>
         <button className="back-to-categories aura-back-link" type="button" onClick={onBack}><ArrowLeft size={15}/> Back to Projects</button>
       </div>
-      <AuraArtwork image={intro} onPreview={setPreviewImage} className="honeybee-hero-artwork"/>
-    </AuraReveal>
-    <div className="project-gallery-note"><span>COMPLETE PROJECT GALLERY</span><span>5 CAMPAIGN DESIGNS</span></div>
-    <AuraReveal className="aura-section honeybee-campaign-section">
+    </div>
+    <div className="project-gallery-note"><span>PROJECT GALLERY</span><span>{String(honeybeeProject.images.length).padStart(2, '0')} CAMPAIGN DESIGNS</span></div>
+    <section className="aura-section honeybee-campaign-section">
       <div className="aura-section-heading"><span className="aura-section-number">CAMPAIGN / 02—05</span><div><h2>Brand launch campaign.</h2><p>A sequence of social creatives introducing the studio, its services, values and way to connect.</p></div></div>
-      <div className="honeybee-gallery">{campaignImages.map((image, index) => <AuraArtwork key={image.src} image={image} onPreview={setPreviewImage} className={`honeybee-gallery-artwork honeybee-gallery-artwork-${index + 2}`}/>)}</div>
+      <div className="honeybee-gallery aura-complete-gallery">{honeybeeProject.images.map((image) => <CompleteProjectImage key={image.src} image={image}/>)}</div>
       <div className="honeybee-project-details"><div><span>PROJECT</span><p>{honeybeeProject.campaign}</p></div><div><span>CATEGORY</span><p>{honeybeeProject.category}</p></div><div><span>VISUAL IDENTITY</span><p>{honeybeeProject.visualIdentity}</p></div></div>
       <button className="back-to-categories aura-back-link honeybee-back-bottom" type="button" onClick={onBack}><ArrowLeft size={15}/> Back to Projects</button>
-    </AuraReveal>
-    <ImagePreview image={previewImage} onClose={() => setPreviewImage(null)} projectName="HONEYBEE STUDIO"/>
+    </section>
   </div>;
 }
 function MoviePosterProjectPage({ project, onBack, onAllCategories }) {
@@ -255,8 +238,7 @@ function Work() {
         <nav className="work-breadcrumbs" aria-label="Breadcrumb"><a href="#home">Home</a><span>/</span><a href="#work" onClick={(event) => { event.preventDefault(); backToCategories(); }}>Selected Work</a><span>/</span><span aria-current="page">{activeCategory.title}</span></nav>
         <button className="back-to-categories" type="button" onClick={backToCategories}><ArrowLeft size={15}/> Back to All Categories</button>
         {activeCategory.galleryType ? <CreativeCategoryGallery category={activeCategory} projects={categoryProjects}/> : categoryProjects.length ? <div className={`project-grid ${activeCategory.id === 'movie-posters' ? 'movie-poster-grid' : ''} ${activeCategory.id === 'corporate-commercial' ? 'corporate-project-grid' : ''}`}>{categoryProjects.map((project, index) => {
-          const showsCompleteGallery = project.id === 'aura-luxury-perfume' || project.id === 'honeybee-studio-brand-launch';
-          const contents = <><div className="project-image"><img src={project.image} alt={`${project.title} ${project.category.toLowerCase()} concept`} loading="lazy"/><span className="project-open"><ArrowUpRight size={18}/></span><span className="project-num">{String(index + 1).padStart(2, '0')} / {String(categoryProjects.length).padStart(2, '0')}</span></div><div className="project-meta"><div><h3>{project.title}</h3><span>{project.category}</span>{project.disclaimer && <small className="project-disclaimer">{project.disclaimer}</small>}</div>{showsCompleteGallery ? <span className="project-gallery-cta">EXPLORE COMPLETE GALLERY <ArrowUpRight size={14}/></span> : <span className="project-year">{project.pageSlug ? 'VIEW PROJECT' : 'PREVIEW'} <ArrowUpRight size={13}/></span>}</div></>;
+          const contents = <><div className="project-image"><img src={project.image} alt={`${project.title} ${project.category.toLowerCase()} concept`} loading="lazy"/><span className="project-open"><ArrowUpRight size={18}/></span><span className="project-num">{String(index + 1).padStart(2, '0')} / {String(categoryProjects.length).padStart(2, '0')}</span></div><div className="project-meta"><div><h3>{project.title}</h3><span>{project.category}</span>{project.disclaimer && <small className="project-disclaimer">{project.disclaimer}</small>}</div><span className="project-year">{project.pageSlug ? 'VIEW PROJECT' : 'PREVIEW'} <ArrowUpRight size={13}/></span></div></>;
           return project.pageSlug
             ? <a className="project-card" href={`${categoryRoutePrefix}${project.categoryId}/${project.pageSlug}`} key={project.id} onClick={(event) => { event.preventDefault(); openProject(project); }} aria-label={`Open ${project.title} project`}>{contents}</a>
             : <button className="project-card" type="button" key={project.id} onClick={() => activeCategory.id === 'corporate-commercial' ? setSelectedCorporateIndex(index) : setSelectedProject(project)} aria-label={`Preview ${project.title}`}>{contents}</button>;
@@ -274,9 +256,8 @@ function Work() {
 }
 function About() { return <section className="about section-wrap" id="about"><SectionLabel number="02">A LITTLE ABOUT ME</SectionLabel><div className="about-content"><div className="about-mark">A<span>.</span></div><div className="about-copy"><h2>Good design makes you <em>feel something.</em></h2><p>I’m Asif, a graphic designer and freelance creative who turns ideas into clear, memorable visual stories. I work across brand identity, marketing design and imagery, with a focus on thoughtful composition and polished detail.</p><p>Photo manipulation and retouching are a core part of my practice, alongside an AI-assisted workflow that helps me explore ideas and shape creative directions. Every final design is guided by the brief, the audience and the story it needs to tell.</p><a className="text-link" href="#contact">Let’s make something together <ArrowUpRight size={15}/></a></div></div></section>; }
 function Skills() { return <section className="expertise section-wrap" id="skills"><SectionLabel number="03">WHAT I BRING</SectionLabel><div className="expertise-columns"><div><h2>My kind of<br/><em>creative.</em></h2><p className="expertise-note">Thoughtful visuals. Clear ideas.<br/>Made with intention.</p></div><div className="skill-list">{expertise.map((skill, i)=><div className="skill-row" key={skill}><span>{String(i + 1).padStart(2, '0')}</span><h3>{skill}</h3><ArrowUpRight size={17}/></div>)}</div></div><div className="tools-line"><span>IN MY TOOLKIT</span><div>{tools.map(t=><span key={t}>{t}</span>)}</div></div></section>; }
-function Contact() { return <section className="contact section-wrap" id="contact"><SectionLabel number="04">HAVE A GOOD ONE IN MIND?</SectionLabel><div className="contact-inner"><div><p className="contact-kicker">LET’S MAKE IT MEAN SOMETHING</p><h2>Have a project?<br/><em>Let’s make it.</em></h2></div><div className="contact-circle" aria-label="Contact links below"><span>LET’S<br/>CONNECT</span><ArrowDown size={24}/></div></div><div className="contact-links" aria-label="Contact and social links">{contactLinks.map((link) => link.href
-    ? <a href={link.href} key={link.label} target={link.label === 'Email' ? undefined : '_blank'} rel={link.label === 'Email' ? undefined : 'noreferrer'}><span>{link.label}</span><ArrowUpRight size={15}/></a>
-    : <span className="contact-link-placeholder" key={link.label} aria-label={`${link.label}: ${link.placeholder}`}><span>{link.label}</span><small>{link.placeholder}</small></span>
+function Contact() { return <section className="contact section-wrap" id="contact"><SectionLabel number="04">HAVE A GOOD ONE IN MIND?</SectionLabel><div className="contact-inner"><div><p className="contact-kicker">LET’S MAKE IT MEAN SOMETHING</p><h2>Have a project?<br/><em>Let’s make it.</em></h2></div><div className="contact-circle" aria-label="Contact links below"><span>LET’S<br/>CONNECT</span><ArrowDown size={24}/></div></div><div className="contact-links" aria-label="Contact and social links">{contactLinks.map((link) =>
+    <a href={link.href} key={link.label} target={link.target} rel={link.target === '_blank' ? 'noopener noreferrer' : undefined} aria-label={`${link.label}: ${link.value}`}><span>{link.label}</span><small className="contact-value">{link.value}</small><ArrowUpRight size={15}/></a>
   )}</div><p className="contact-note">I’m always up for good people and interesting ideas.</p></section>; }
 function Footer() { return <footer className="footer"><a className="wordmark" href="#home">ASIF<span> K A</span><i>®</i></a><span className="footer-note">INDEPENDENT DESIGNER · INDIA</span><a className="back-top" href="#home" aria-label="Back to top"><ArrowUpRight size={17}/></a><span className="copyright">© {new Date().getFullYear()} ASIF K A</span></footer>; }
 export default function App() { return <><div className="site-shell"><Header/><main><Hero/><Work/><About/><Skills/><Contact/></main><Footer/></div></>; }

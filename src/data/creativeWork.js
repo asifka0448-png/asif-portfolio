@@ -9,4 +9,45 @@ export const creativeCategories = [
 // Add future projects here. Image entries use `images: [{ src, alt, side? }]`;
 // a front/back visiting card belongs in one project object's `images` array.
 // Video entries use `mediaType: 'video'`, `src`, and an optional `poster` path.
-export const creativeProjects = [];
+export const creativeProjects = [
+  {
+    id: 'aura-logo',
+    categoryId: 'logo-design-brand-identity',
+    title: 'AURA Logo',
+    category: 'Logo Design & Brand Identity',
+    description: 'Logo Design · Brand Identity',
+    image: '/assets/logos/Aura Logo.jpg',
+  },
+  {
+    id: 'honeybee-logo',
+    categoryId: 'logo-design-brand-identity',
+    title: 'HoneyBee Logo',
+    category: 'Logo Design & Brand Identity',
+    description: 'Logo Design · Brand Identity',
+    image: '/assets/logos/HONEYBEE.jpg',
+  },
+  {
+    id: 'l-logo',
+    categoryId: 'logo-design-brand-identity',
+    title: 'L Logo',
+    category: 'Logo Design & Brand Identity',
+    description: 'Logo Design · Brand Identity',
+    image: '/assets/logos/L.jpg',
+  },
+  {
+    id: 'logo-design',
+    categoryId: 'logo-design-brand-identity',
+    title: 'Logo Design',
+    category: 'Logo Design & Brand Identity',
+    description: 'Logo Design · Brand Identity',
+    image: '/assets/logos/LOGO.jpg',
+  },
+  {
+    id: 'memo-finds-logo',
+    categoryId: 'logo-design-brand-identity',
+    title: 'Memo Finds Logo',
+    category: 'Logo Design & Brand Identity',
+    description: 'Logo Design · Brand Identity',
+    image: '/assets/logos/Memo Finds.jpg',
+  },
+];

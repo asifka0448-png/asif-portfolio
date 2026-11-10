@@ -1,29 +1,27 @@
 export const contactDetails = {
-  whatsappNumber: '', // International format, digits only. Example: 919876543210
-  email: '',
-  instagramUrl: '',
-  linkedinUrl: '',
+  whatsapp: {
+    label: 'WhatsApp',
+    value: '+91 9539230448',
+    href: 'https://wa.me/919539230448',
+    target: '_blank',
+  },
+  email: {
+    label: 'Email',
+    value: 'asifka0448@gmail.com',
+    href: 'mailto:asifka0448@gmail.com',
+  },
+  instagram: {
+    label: 'Instagram',
+    value: '@asif_alibava',
+    href: 'https://www.instagram.com/asif_alibava/',
+    target: '_blank',
+  },
+  linkedin: {
+    label: 'LinkedIn',
+    value: 'Asif K A',
+    href: 'https://www.linkedin.com/in/asif-k-a-639501222/',
+    target: '_blank',
+  },
 };
 
-export const contactLinks = [
-  {
-    label: 'WhatsApp',
-    placeholder: 'ADD PHONE NUMBER',
-    getHref: ({ whatsappNumber }) => whatsappNumber ? `https://wa.me/${whatsappNumber.replace(/\D/g, '')}` : '',
-  },
-  {
-    label: 'Email',
-    placeholder: 'ADD EMAIL ADDRESS',
-    getHref: ({ email }) => email ? `mailto:${email}` : '',
-  },
-  {
-    label: 'Instagram',
-    placeholder: 'ADD PROFILE URL',
-    getHref: ({ instagramUrl }) => instagramUrl,
-  },
-  {
-    label: 'LinkedIn',
-    placeholder: 'ADD PROFILE URL',
-    getHref: ({ linkedinUrl }) => linkedinUrl,
-  },
-].map((item) => ({ ...item, href: item.getHref(contactDetails) }));
+export const contactLinks = Object.values(contactDetails);
