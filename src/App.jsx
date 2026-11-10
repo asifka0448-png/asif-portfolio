@@ -6,6 +6,10 @@ import { auraProject } from './data/aura.js';
 import { honeybeeProject } from './data/honeybee.js';
 import { moviePosterProjects } from './data/moviePosters.js';
 
+const auraGalleryImages = [auraProject.heroImage, ...auraProject.sections.flatMap((section) => section.images)]
+  .filter((image, index, images) => images.findIndex((candidate) => candidate.src === image.src) === index);
+const honeybeeGalleryImages = honeybeeProject.images;
+
 function Header() {
   const [open, setOpen] = useState(false);
   const close = () => setOpen(false);
@@ -117,45 +121,49 @@ function AuraArtwork({ image, onPreview, className = '' }) {
 function AuraSection({ id, number, title, description, children }) {
   return <section className="aura-section"><div className="aura-section-heading"><span className="aura-section-number">{number} / 06</span><div><h2>{title}</h2>{description && <p>{description}</p>}</div></div><div id={id}>{children}</div></section>;
 }
-function CompleteProjectImage({ image, className = '' }) {
-  return <figure className={`complete-project-image ${className}`}><div className="complete-project-image-stage"><img src={image.src} alt={image.alt} loading="eager" decoding="async"/></div><figcaption>{image.caption}</figcaption></figure>;
+function CompleteProjectImage({ image, className = '', onPreview }) {
+  return <figure className={`complete-project-image ${className}`}><button className="complete-project-image-button" type="button" onClick={onPreview} aria-label={`Open full-size preview: ${image.caption}`}><span className="complete-project-image-stage"><img src={image.src} alt={image.alt} loading="eager" decoding="async"/></span></button><figcaption>{image.caption}</figcaption></figure>;
 }
 function AuraProjectPage({ onBack }) {
-  const projectImages = [auraProject.heroImage, ...auraProject.sections.flatMap((section) => section.images)]
-    .filter((image, index, images) => images.findIndex((candidate) => candidate.src === image.src) === index);
+  const [previewIndex, setPreviewIndex] = useState(null);
+  const projectImages = auraGalleryImages;
   return <div className="aura-project-page">
     <div className="aura-hero">
       <div className="aura-hero-copy"><nav className="work-breadcrumbs" aria-label="Breadcrumb"><a href="#home">Home</a><span>/</span><a href="#work" onClick={(event) => { event.preventDefault(); onBack(); }}>Selected Work</a><span>/</span><span>{auraProject.category}</span><span>/</span><span aria-current="page">AURA</span></nav>
-        <span className="aura-category-label">BRAND IDENTITY & PACKAGING</span><span className="aura-hero-number">01 / 06</span><h1>{auraProject.title}</h1><p className="aura-hero-subtitle">{auraProject.subtitle}</p><p className="aura-tagline">{auraProject.tagline}</p><p className="aura-hero-description">{auraProject.description}</p>
+        <span className="aura-category-label">BRAND IDENTITY & PACKAGING</span><span className="aura-hero-number">01 / {String(projectImages.length).padStart(2, '0')}</span><h1>{auraProject.title}</h1><p className="aura-hero-subtitle">{auraProject.subtitle}</p><p className="aura-tagline">{auraProject.tagline}</p><p className="aura-hero-description">{auraProject.description}</p>
         <button className="back-to-categories aura-back-link" type="button" onClick={onBack}><ArrowLeft size={15}/> Back to Brand Identity & Packaging</button>
       </div>
     </div>
     <div className="project-gallery-note"><span>PROJECT GALLERY</span><span>{String(projectImages.length).padStart(2, '0')} ORIGINAL IMAGES</span></div>
-    <div className="aura-complete-gallery">{projectImages.map((image) => <CompleteProjectImage key={image.src} image={image}/>)}</div>
+    <div className="aura-complete-gallery">{projectImages.map((image, index) => <CompleteProjectImage key={image.src} image={image} onPreview={() => setPreviewIndex(index)}/>)}</div>
     <AuraSection id="project-credits" number="06" title="Project Credits" description="A personal concept study in luxury fragrance branding.">
       <div className="aura-credits-grid">{auraProject.credits.map((credit) => <div className="aura-credit" key={credit.label}><span>{credit.label}</span><p>{credit.value}</p></div>)}</div>
       <p className="aura-disclaimer">{auraProject.disclaimer}</p>
       <button className="back-to-categories aura-back-link aura-back-bottom" type="button" onClick={onBack}><ArrowLeft size={15}/> Back to Brand Identity & Packaging</button>
     </AuraSection>
+    {previewIndex !== null && <ImagePreview image={projectImages[previewIndex]} onClose={() => setPreviewIndex(null)} projectName="AURA LUXURY PERFUME BRANDING" gallery={projectImages} activeIndex={previewIndex} onNavigate={setPreviewIndex}/>}
   </div>;
 }
 function HoneybeeProjectPage({ onBack }) {
+  const [previewIndex, setPreviewIndex] = useState(null);
+  const projectImages = honeybeeGalleryImages;
   return <div className="honeybee-project-page">
     <div className="honeybee-hero">
       <div className="honeybee-hero-copy">
         <nav className="work-breadcrumbs" aria-label="Breadcrumb"><a href="#home">Home</a><span>/</span><a href="#work" onClick={(event) => { event.preventDefault(); onBack(); }}>Selected Work</a><span>/</span><span>{honeybeeProject.category}</span><span>/</span><span aria-current="page">HoneyBee Studio</span></nav>
-        <span className="aura-category-label">SOCIAL MEDIA & MARKETING DESIGNS</span><span className="aura-hero-number">BRAND LAUNCH CAMPAIGN</span>
+        <span className="aura-category-label">SOCIAL MEDIA & MARKETING DESIGNS</span><span className="aura-hero-number">01 / {String(projectImages.length).padStart(2, '0')}</span>
         <h1>{honeybeeProject.title}</h1><p className="honeybee-tagline">{honeybeeProject.tagline}</p><p className="aura-hero-description">{honeybeeProject.description}</p>
         <button className="back-to-categories aura-back-link" type="button" onClick={onBack}><ArrowLeft size={15}/> Back to Projects</button>
       </div>
     </div>
-    <div className="project-gallery-note"><span>PROJECT GALLERY</span><span>{String(honeybeeProject.images.length).padStart(2, '0')} CAMPAIGN DESIGNS</span></div>
+    <div className="project-gallery-note"><span>BRAND LAUNCH CAMPAIGN</span><span>{String(projectImages.length).padStart(2, '0')} CAMPAIGN DESIGNS</span></div>
     <section className="aura-section honeybee-campaign-section">
       <div className="aura-section-heading"><span className="aura-section-number">CAMPAIGN / 02—05</span><div><h2>Brand launch campaign.</h2><p>A sequence of social creatives introducing the studio, its services, values and way to connect.</p></div></div>
-      <div className="honeybee-gallery aura-complete-gallery">{honeybeeProject.images.map((image) => <CompleteProjectImage key={image.src} image={image}/>)}</div>
+      <div className="honeybee-gallery aura-complete-gallery">{projectImages.map((image, index) => <CompleteProjectImage key={image.src} image={image} onPreview={() => setPreviewIndex(index)}/>)}</div>
       <div className="honeybee-project-details"><div><span>PROJECT</span><p>{honeybeeProject.campaign}</p></div><div><span>CATEGORY</span><p>{honeybeeProject.category}</p></div><div><span>VISUAL IDENTITY</span><p>{honeybeeProject.visualIdentity}</p></div></div>
       <button className="back-to-categories aura-back-link honeybee-back-bottom" type="button" onClick={onBack}><ArrowLeft size={15}/> Back to Projects</button>
     </section>
+    {previewIndex !== null && <ImagePreview image={projectImages[previewIndex]} onClose={() => setPreviewIndex(null)} projectName="HONEYBEE STUDIO" gallery={projectImages} activeIndex={previewIndex} onNavigate={setPreviewIndex}/>}
   </div>;
 }
 function MoviePosterProjectPage({ project, onBack, onAllCategories }) {
@@ -238,7 +246,8 @@ function Work() {
         <nav className="work-breadcrumbs" aria-label="Breadcrumb"><a href="#home">Home</a><span>/</span><a href="#work" onClick={(event) => { event.preventDefault(); backToCategories(); }}>Selected Work</a><span>/</span><span aria-current="page">{activeCategory.title}</span></nav>
         <button className="back-to-categories" type="button" onClick={backToCategories}><ArrowLeft size={15}/> Back to All Categories</button>
         {activeCategory.galleryType ? <CreativeCategoryGallery category={activeCategory} projects={categoryProjects}/> : categoryProjects.length ? <div className={`project-grid ${activeCategory.id === 'movie-posters' ? 'movie-poster-grid' : ''} ${activeCategory.id === 'corporate-commercial' ? 'corporate-project-grid' : ''}`}>{categoryProjects.map((project, index) => {
-          const contents = <><div className="project-image"><img src={project.image} alt={`${project.title} ${project.category.toLowerCase()} concept`} loading="lazy"/><span className="project-open"><ArrowUpRight size={18}/></span><span className="project-num">{String(index + 1).padStart(2, '0')} / {String(categoryProjects.length).padStart(2, '0')}</span></div><div className="project-meta"><div><h3>{project.title}</h3><span>{project.category}</span>{project.disclaimer && <small className="project-disclaimer">{project.disclaimer}</small>}</div><span className="project-year">{project.pageSlug ? 'VIEW PROJECT' : 'PREVIEW'} <ArrowUpRight size={13}/></span></div></>;
+          const projectImageCount = project.pageSlug === 'aura' ? auraGalleryImages.length : project.pageSlug === 'honeybee-studio' ? honeybeeGalleryImages.length : categoryProjects.length;
+          const contents = <><div className="project-image"><img src={project.image} alt={`${project.title} ${project.category.toLowerCase()} concept`} loading="lazy"/><span className="project-open"><ArrowUpRight size={18}/></span><span className="project-num">{String(index + 1).padStart(2, '0')} / {String(projectImageCount).padStart(2, '0')}</span></div><div className="project-meta"><div><h3>{project.title}</h3><span>{project.category}</span>{project.disclaimer && <small className="project-disclaimer">{project.disclaimer}</small>}</div><span className="project-year">{project.pageSlug ? 'VIEW PROJECT' : 'PREVIEW'} <ArrowUpRight size={13}/></span></div></>;
           return project.pageSlug
             ? <a className="project-card" href={`${categoryRoutePrefix}${project.categoryId}/${project.pageSlug}`} key={project.id} onClick={(event) => { event.preventDefault(); openProject(project); }} aria-label={`Open ${project.title} project`}>{contents}</a>
             : <button className="project-card" type="button" key={project.id} onClick={() => activeCategory.id === 'corporate-commercial' ? setSelectedCorporateIndex(index) : setSelectedProject(project)} aria-label={`Preview ${project.title}`}>{contents}</button>;

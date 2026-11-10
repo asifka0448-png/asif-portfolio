@@ -40,9 +40,12 @@
 /* AURA and HoneyBee artwork is shown inline as one continuous, uncropped gallery. */
 .aura-complete-gallery{display:flex;flex-direction:column;gap:clamp(28px,5vw,64px);padding:18px 0 38px}
 .complete-project-image{width:100%;margin:0}
+.complete-project-image-button{display:block;width:100%;padding:0;border:0;background:transparent;color:inherit;text-align:inherit;cursor:zoom-in}
 .complete-project-image-stage{display:flex;justify-content:center;align-items:center;min-height:180px;width:100%;overflow:hidden;background:linear-gradient(145deg,rgba(26,20,35,.64),rgba(10,9,12,.72));border:1px solid rgba(242,236,255,.07)}
 .complete-project-image img{display:block;width:auto;height:auto;max-width:100%;max-height:min(88vh,1100px);object-fit:contain;transition:filter .35s,transform .5s}
-.complete-project-image-stage:hover img{filter:brightness(1.035);transform:scale(1.008)}
+.complete-project-image-button:hover .complete-project-image-stage,.complete-project-image-button:focus-visible .complete-project-image-stage{border-color:rgba(183,157,255,.4);box-shadow:0 16px 42px rgba(89,56,139,.17)}
+.complete-project-image-button:hover img{filter:brightness(1.035);transform:scale(1.008)}
+.complete-project-image-button:focus-visible{outline:1px solid var(--purple);outline-offset:4px}
 .complete-project-image figcaption{margin-top:12px;color:#aaa2b2;font:9px var(--mono);letter-spacing:.09em;text-transform:uppercase}
 .honeybee-campaign-section{padding-top:64px}
 @media(max-width:600px){.aura-complete-gallery{gap:27px;padding-top:12px}.complete-project-image-stage{min-height:120px}.complete-project-image img{max-height:none;width:100%}.complete-project-image figcaption{margin-top:9px;font-size:8px}.honeybee-campaign-section{padding-top:48px}}
