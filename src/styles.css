@@ -31,3 +31,7 @@
 @media(max-width:1380px) and (min-width:761px){.hero-name-row h1{font-size:15.4vw}.hero-profile-photo{flex-basis:clamp(98px,10vw,140px);width:clamp(98px,10vw,140px)}}
 @media(max-width:760px){.hero-name-row{gap:clamp(9px,2.2vw,16px)}.hero-name-row h1{font-size:clamp(46px,13vw,98px);margin:48px 0 42px}.hero-profile-photo{flex-basis:clamp(70px,13vw,100px);width:clamp(70px,13vw,100px)}}
 @media(max-width:360px){.hero-name-row h1{font-size:clamp(36px,11.5vw,42px);margin:44px 0 38px}.hero-profile-photo{flex-basis:64px;width:64px}}
+
+/* Complete image sets are part of each project page, not hidden behind a card action. */
+.project-gallery-note{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 8px;padding:17px 0;border-bottom:1px solid var(--line);font:9px var(--mono);letter-spacing:.12em;color:#aaa2b2}.project-gallery-note span:last-child{color:#c2a7ff}.project-gallery-cta{display:inline-flex;align-items:center;justify-content:center;gap:9px;align-self:center;flex-shrink:0;padding:11px 13px;border:1px solid rgba(183,157,255,.38);background:rgba(132,92,212,.09);color:#e4d7ff;font:8px var(--mono);letter-spacing:.06em;transition:transform .22s,border-color .22s,background .22s}.project-card:hover .project-gallery-cta{transform:translateY(-2px);border-color:rgba(183,157,255,.7);background:rgba(132,92,212,.17)}.project-meta:has(.project-gallery-cta){flex-wrap:wrap;gap:13px}
+@media(max-width:600px){.project-gallery-note{padding:14px 0;font-size:8px;letter-spacing:.07em;gap:8px}.project-gallery-cta{align-self:flex-start}}

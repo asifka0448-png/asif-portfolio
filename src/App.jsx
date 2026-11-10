@@ -121,6 +121,7 @@ function AuraProjectPage({ onBack }) {
   const [previewImage, setPreviewImage] = useState(null);
   const identity = auraProject.sections.find((section) => section.id === 'brand-identity');
   const productDesign = auraProject.sections.find((section) => section.id === 'product-design');
+  const remainingProductImages = productDesign.images.filter((image) => image.src !== auraProject.heroImage.src);
   const packaging = auraProject.sections.find((section) => section.id === 'packaging-system');
   const campaign = auraProject.sections.find((section) => section.id === 'social-campaign');
   return <div className="aura-project-page">
@@ -130,11 +131,12 @@ function AuraProjectPage({ onBack }) {
         <button className="back-to-categories aura-back-link" type="button" onClick={onBack}><ArrowLeft size={15}/> Back to Brand Identity & Packaging</button>
       </div><AuraArtwork image={auraProject.heroImage} onPreview={setPreviewImage} className="aura-hero-artwork"/>
     </AuraReveal>
+    <div className="project-gallery-note"><span>COMPLETE PROJECT GALLERY</span><span>12 ORIGINAL IMAGES</span></div>
     <AuraSection id="brand-identity" number="02" title={identity.title} description={identity.description}>
       <div className="aura-identity-layout"><AuraArtwork image={identity.images[0]} onPreview={setPreviewImage} className="aura-identity-artwork"/><div className="aura-identity-note"><span>VISUAL LANGUAGE</span><p>Deep purple brings depth and presence; silver typography adds a quiet metallic refinement. Minimal compositions keep the identity elegant and distinctly premium.</p></div></div>
     </AuraSection>
     <AuraSection id="product-design" number="03" title={productDesign.title} description={productDesign.description}>
-      <div className="aura-gallery aura-gallery-product">{productDesign.images.map((image) => <AuraArtwork key={image.src} image={image} onPreview={setPreviewImage}/>)}</div>
+      <div className="aura-gallery aura-gallery-product">{remainingProductImages.map((image) => <AuraArtwork key={image.src} image={image} onPreview={setPreviewImage}/>)}</div>
     </AuraSection>
     <AuraSection id="packaging-system" number="04" title={packaging.title} description={packaging.description}>
       <div className="aura-gallery aura-gallery-packaging">{packaging.images.map((image) => <AuraArtwork key={image.src} image={image} onPreview={setPreviewImage}/>)}</div>
@@ -163,6 +165,7 @@ function HoneybeeProjectPage({ onBack }) {
       </div>
       <AuraArtwork image={intro} onPreview={setPreviewImage} className="honeybee-hero-artwork"/>
     </AuraReveal>
+    <div className="project-gallery-note"><span>COMPLETE PROJECT GALLERY</span><span>5 CAMPAIGN DESIGNS</span></div>
     <AuraReveal className="aura-section honeybee-campaign-section">
       <div className="aura-section-heading"><span className="aura-section-number">CAMPAIGN / 02—05</span><div><h2>Brand launch campaign.</h2><p>A sequence of social creatives introducing the studio, its services, values and way to connect.</p></div></div>
       <div className="honeybee-gallery">{campaignImages.map((image, index) => <AuraArtwork key={image.src} image={image} onPreview={setPreviewImage} className={`honeybee-gallery-artwork honeybee-gallery-artwork-${index + 2}`}/>)}</div>
@@ -252,7 +255,8 @@ function Work() {
         <nav className="work-breadcrumbs" aria-label="Breadcrumb"><a href="#home">Home</a><span>/</span><a href="#work" onClick={(event) => { event.preventDefault(); backToCategories(); }}>Selected Work</a><span>/</span><span aria-current="page">{activeCategory.title}</span></nav>
         <button className="back-to-categories" type="button" onClick={backToCategories}><ArrowLeft size={15}/> Back to All Categories</button>
         {activeCategory.galleryType ? <CreativeCategoryGallery category={activeCategory} projects={categoryProjects}/> : categoryProjects.length ? <div className={`project-grid ${activeCategory.id === 'movie-posters' ? 'movie-poster-grid' : ''} ${activeCategory.id === 'corporate-commercial' ? 'corporate-project-grid' : ''}`}>{categoryProjects.map((project, index) => {
-          const contents = <><div className="project-image"><img src={project.image} alt={`${project.title} ${project.category.toLowerCase()} concept`} loading="lazy"/><span className="project-open"><ArrowUpRight size={18}/></span><span className="project-num">{String(index + 1).padStart(2, '0')} / {String(categoryProjects.length).padStart(2, '0')}</span></div><div className="project-meta"><div><h3>{project.title}</h3><span>{project.category}</span>{project.disclaimer && <small className="project-disclaimer">{project.disclaimer}</small>}</div><span className="project-year">{project.pageSlug ? 'VIEW PROJECT' : 'PREVIEW'} <ArrowUpRight size={13}/></span></div></>;
+          const showsCompleteGallery = project.id === 'aura-luxury-perfume' || project.id === 'honeybee-studio-brand-launch';
+          const contents = <><div className="project-image"><img src={project.image} alt={`${project.title} ${project.category.toLowerCase()} concept`} loading="lazy"/><span className="project-open"><ArrowUpRight size={18}/></span><span className="project-num">{String(index + 1).padStart(2, '0')} / {String(categoryProjects.length).padStart(2, '0')}</span></div><div className="project-meta"><div><h3>{project.title}</h3><span>{project.category}</span>{project.disclaimer && <small className="project-disclaimer">{project.disclaimer}</small>}</div>{showsCompleteGallery ? <span className="project-gallery-cta">EXPLORE COMPLETE GALLERY <ArrowUpRight size={14}/></span> : <span className="project-year">{project.pageSlug ? 'VIEW PROJECT' : 'PREVIEW'} <ArrowUpRight size={13}/></span>}</div></>;
           return project.pageSlug
             ? <a className="project-card" href={`${categoryRoutePrefix}${project.categoryId}/${project.pageSlug}`} key={project.id} onClick={(event) => { event.preventDefault(); openProject(project); }} aria-label={`Open ${project.title} project`}>{contents}</a>
             : <button className="project-card" type="button" key={project.id} onClick={() => activeCategory.id === 'corporate-commercial' ? setSelectedCorporateIndex(index) : setSelectedProject(project)} aria-label={`Preview ${project.title}`}>{contents}</button>;
