@@ -21,6 +21,7 @@ A responsive React and Vite portfolio. Categories, projects, expertise and tools
 - AURA's detail page content and gallery groups are editable in src/data/aura.js; the project entry in src/data/portfolio.js connects its category card and route. Original AURA images are in public/assets/aura/.
 - HoneyBee Studio's campaign details and ordered gallery are editable in src/data/honeybee.js; its project entry in src/data/portfolio.js connects it only to Social Media & Marketing Designs. Original campaign artwork is in public/assets/honeybee-studio/.
 - Movie poster titles, descriptions, concepts and image paths are editable in src/data/moviePosters.js. Their project cards link to individual detail views, and the supplied poster originals remain in public/assets/movie-posters/.
+- Corporate & Commercial Designs are listed in src/data/corporate.js. Each image is its own work, including the two Chicfer designs and original/redesigned family gathering invitations.
 - Skills and software tools are in the same file.
 
 ## Add contact details

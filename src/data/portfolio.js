@@ -1,4 +1,5 @@
 import { moviePosterProjects } from './moviePosters.js';
+import { corporateProjects } from './corporate.js';
 
 export const categories = [
   { id: 'product-advertising', title: 'Product Advertising' },
@@ -19,6 +20,7 @@ export const projects = [
   { id: 'chicfer-organic-fertilizer', categoryId: 'product-advertising', title: 'Chicfer Organic Fertilizer', category: 'Product Advertising', image: '/assets/product-advertising/Chicfer.jpg', disclaimer: 'Unofficial personal design concept · not an official brand campaign.' },
   { id: 'coca-cola', categoryId: 'product-advertising', title: 'Coca-Cola', category: 'Product Advertising', image: '/assets/product-advertising/COLA.jpg', disclaimer: 'Unofficial personal design concept · not an official brand campaign.' },
   ...moviePosterProjects,
+  ...corporateProjects,
 ];
 
 export const expertise = [
